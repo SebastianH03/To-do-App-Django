@@ -1,10 +1,34 @@
-<h1>Pending Tasks</h1>
+{% extends 'base/index.html' %}
+{% block content %}
+
+<div class="top-bar">
+    <div>
+        <h1>Hi {{request.user|title}}</h1>
+        <h3 style="margin: 0; ">
+            You have <strong>{{ count }}</strong> task{{ count|pluralize }} remaining
+        </h3>
+    </div>
+    {% if request.user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Exit</button>
+    </form>
+    {% else %}
+    <a href="{% url 'login' %}">Log In</a>
+    {% endif %}
+</div>
+<h1>Current Tasks</h1>
 
 <a href="{% url 'create' %}">Create a new task</a>
 
+<form method="GET">
+    <input type="text" name="search-area" value="{{search_value}}">
+    <input type="submit" name="search">
+</form>
+
 <table>
     <tr>
-        <th>Elementos</th>
+        <th>Elements</th>
         <th></th>
         <th></th>
     </tr>
@@ -19,8 +43,9 @@
     </tr>
 
     {% empty %}
-    <h3>No hay elementos en esta lista</h3>
+    <h3>List is empty</h3>
 
     {% endfor %}
 
 </table>
+{% endblock content %}
