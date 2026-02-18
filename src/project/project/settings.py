@@ -43,7 +43,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['D:\\ProyectosPersonales\\to-doApp\\To-do-App-Django\src\project\\base\\templates'],
+        'DIRS': [BASE_DIR / "base" / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,3 +105,4 @@ LOGIN_URL = '/login'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / "base" / "static"]

@@ -1,12 +1,49 @@
-{% extends 'base/index.html' %}
+{% extends 'base/layout.html' %}
+{% block title %}Register{% endblock %}
+
 {% block content %}
-<h1>Sing-up</h1>
+<div class="content" style="max-width:420px;margin:auto;">
 
-<form method="POST">
+  <h1 style="margin-top:0;">Create account</h1>
+  <p class="muted" style="margin-bottom:18px;">
+    Start managing your tasks today
+  </p>
+
+  <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Register">
-</form>
 
-<p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
-{% endblock content %}
+    {% for field in form %}
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-weight:600;margin-bottom:6px;">
+          {{ field.label }}
+        </label>
+
+        {{ field }}
+
+        {% if field.help_text %}
+          <div class="muted" style="font-size:12px;">
+            {{ field.help_text }}
+          </div>
+        {% endif %}
+
+        {% for error in field.errors %}
+          <div style="color:#DC2626;font-size:13px;">
+            {{ error }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button class="btn btn-primary" type="submit" style="width:100%;margin-top:10px;">
+      Register
+    </button>
+
+  </form>
+
+  <p class="muted" style="margin-top:16px;">
+    Already have an account?
+    <a href="{% url 'login' %}">Log in</a>
+  </p>
+
+</div>
+{% endblock %}

@@ -1,9 +1,36 @@
-{% extends 'base/index.html' %}
+{% extends 'base/layout.html' %}
+{% block title %}Task Details{% endblock %}
+
 {% block content %}
-<h1>Tasks: {{task}}</h1>
+<header class="header">
+  <div>
+    <h1>Task details</h1>
+    <p class="muted">Review the task info and status</p>
+  </div>
 
-<p>ID: {{ task.id }}</p>
-<p>Completed: {{ task.completed }}</p>
+  <div class="row">
+    <a class="btn" href="{% url 'pending' %}">Back to tasks</a>
+  </div>
+</header>
 
-<a href="{% url 'pending' %}">Back</a>
-{% endblock content %}
+<div class="content">
+  <div class="row" style="margin-bottom: 14px;">
+    <span class="badge">
+      {% if task.completed %}Completed{% else %}Pending{% endif %}
+    </span>
+    <div class="spacer"></div>
+    <a class="btn" href="{% url 'update' task.pk %}">Edit</a>
+    <a class="btn btn-danger" href="{% url 'delete' task.pk %}">Delete</a>
+  </div>
+
+  <h2 style="margin: 0 0 10px 0; font-size: 20px;">
+    {{ task.title }}
+  </h2>
+
+  <div class="muted" style="margin-bottom: 16px;">
+    Task ID: {{ task.id }}
+  </div>
+
+  <p>{{ task.description }}</p>
+</div>
+{% endblock %}

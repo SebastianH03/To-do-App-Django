@@ -8,10 +8,11 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Task
+from .forms import TaskForm, LoginForm, RegisterForm
 
 class Login(LoginView):
     template_name = 'base/login.html'
-    fields = '__all__'
+    authentication_form = LoginForm
     redirect_authenticated_user = True
 
     def get_success_url(self):
@@ -19,7 +20,7 @@ class Login(LoginView):
 
 class Register(FormView):
     template_name = 'base/register.html'
-    form_class = UserCreationForm
+    form_class = RegisterForm
     redirect_authenticated_user = True
     success_url = reverse_lazy('pending')
 
@@ -57,10 +58,9 @@ class DetailedTask(LoginRequiredMixin, DetailView):
 
 class CreateTask(LoginRequiredMixin, CreateView):
     model = Task
-    fields = ['title', 'description', 'completed']
+    form_class = TaskForm
     success_url = reverse_lazy('pending')
     template_name = 'base/task_form.html'
-    context_object_name = 'task'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -68,9 +68,8 @@ class CreateTask(LoginRequiredMixin, CreateView):
 
 class UpdateTask(LoginRequiredMixin, UpdateView):
     model = Task
-    fields = ['title', 'description', 'completed']
-    template_name = 'base/task_update.html'
-    context_object_name = 'task'
+    form_class = TaskForm
+    template_name = 'base/task_form.html'
     success_url = reverse_lazy('pending')
 
 class DeleteTask(LoginRequiredMixin, DeleteView):

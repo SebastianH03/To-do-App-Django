@@ -1,11 +1,64 @@
-{% extends 'base/index.html' %}
-{% block content %}
-<h1>Task Form</h1>
-<a href="{% url 'pending' %}">Back</a>
+{% extends 'base/layout.html' %}
+{% block title %}Task Form{% endblock %}
 
-<form method="POST" action="">
+{% block content %}
+<header class="header">
+  <div>
+    <h1>
+      {% if form.instance.pk %}
+        Edit task
+      {% else %}
+        Create task
+      {% endif %}
+    </h1>
+    <p class="muted">
+      {% if form.instance.pk %}
+        Update the task information
+      {% else %}
+        Add a new task to your list
+      {% endif %}
+    </p>
+  </div>
+
+  <a class="btn" href="{% url 'pending' %}">Back to tasks</a>
+</header>
+
+<div class="content">
+
+  <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Send">
-</form>
-{% endblock content %}
+
+    {% for field in form %}
+      <div style="margin-bottom: 14px;">
+        <label style="display:block; font-weight:600; margin-bottom:6px;">
+          {{ field.label }}
+        </label>
+
+        {{ field }}
+
+        {% if field.help_text %}
+          <div class="muted" style="font-size:12px;">
+            {{ field.help_text }}
+          </div>
+        {% endif %}
+
+        {% for error in field.errors %}
+          <div style="color:#DC2626; font-size:13px;">
+            {{ error }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <div class="row" style="margin-top: 16px;">
+      <a class="btn" href="{% url 'pending' %}">Cancel</a>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" type="submit">
+        {% if form.instance.pk %}Update{% else %}Create{% endif %}
+      </button>
+    </div>
+
+  </form>
+
+</div>
+{% endblock %}

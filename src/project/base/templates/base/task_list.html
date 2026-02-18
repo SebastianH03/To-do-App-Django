@@ -1,51 +1,70 @@
-{% extends 'base/index.html' %}
+{% extends 'base/layout.html' %}
+{% block title %}Tasks{% endblock %}
 {% block content %}
 
-<div class="top-bar">
-    <div>
-        <h1>Hi {{request.user|title}}</h1>
-        <h3 style="margin: 0; ">
-            You have <strong>{{ count }}</strong> task{{ count|pluralize }} remaining
-        </h3>
-    </div>
-    {% if request.user.is_authenticated %}
-    <form method="post" action="{% url 'logout' %}">
+<header class="header">
+  <div>
+    <h1>Hi {{ request.user|title }}</h1>
+    <p>You have <span class="badge">{{ count }}</span> task{{ count|pluralize }} remaining</p>
+  </div>
+
+  <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
-    <button type="submit">Exit</button>
+    <button class="btn" type="submit">Exit</button>
+  </form>
+</header>
+
+<div class="content">
+  <div class="row">
+    <a class="btn btn-primary" href="{% url 'create' %}">Create task</a>
+
+    <div class="spacer"></div>
+
+    <form method="GET" class="search-form">
+        <input class="input search-input"
+               type="text"
+               name="search-area"
+               value="{{ search_value }}"
+               placeholder="Search tasks...">
+
+        <button class="btn" type="submit">Search</button>
     </form>
-    {% else %}
-    <a href="{% url 'login' %}">Log In</a>
-    {% endif %}
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th style="width: 260px;">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>
+          <strong>{{ task.title }}</strong>
+          {% if task.completed %}
+            <div class="muted">Completed</div>
+          {% else %}
+            <div class="muted">Pending</div>
+          {% endif %}
+        </td>
+
+        <td>
+          <div class="actions">
+            <a class="btn" href="{% url 'detailed' task.pk %}">View</a>
+            <a class="btn" href="{% url 'update' task.pk %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'delete' task.pk %}">Delete</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="2" class="muted">List is empty</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-<h1>Current Tasks</h1>
-
-<a href="{% url 'create' %}">Create a new task</a>
-
-<form method="GET">
-    <input type="text" name="search-area" value="{{search_value}}">
-    <input type="submit" name="search">
-</form>
-
-<table>
-    <tr>
-        <th>Elements</th>
-        <th></th>
-        <th></th>
-    </tr>
-
-    {% for task in tasks %}
-
-    <tr>
-        <td>{{task.title}}</td>
-        <td><a href="{% url 'detailed' task.pk %}">View</a></td>
-        <td><a href="{% url 'update' task.pk %}">Edit</a></td>
-        <td><a href="{% url 'delete' task.pk %}">Delete</a></td>
-    </tr>
-
-    {% empty %}
-    <h3>List is empty</h3>
-
-    {% endfor %}
-
-</table>
-{% endblock content %}
+{% endblock %}
