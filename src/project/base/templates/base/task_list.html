@@ -1,0 +1,26 @@
+<h1>Pending Tasks</h1>
+
+<a href="{% url 'create' %}">Create a new task</a>
+
+<table>
+    <tr>
+        <th>Elementos</th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    {% for task in tasks %}
+
+    <tr>
+        <td>{{task.title}}</td>
+        <td><a href="{% url 'detailed' task.pk %}">View</a></td>
+        <td><a href="{% url 'update' task.pk %}">Edit</a></td>
+        <td><a href="{% url 'delete' task.pk %}">Delete</a></td>
+    </tr>
+
+    {% empty %}
+    <h3>No hay elementos en esta lista</h3>
+
+    {% endfor %}
+
+</table>
